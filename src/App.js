@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from 'components/Header';
+import AlbumFeature from 'features/Album';
+import TodoFeature from 'features/Todo';
+import { useEffect } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import styled from 'styled-components';
+import productApi from './api/productApi';
+const Title = styled.h1`
+  text-aglin: center;
+  font-weight: bold;
+
+  color:${(props) => props.color || 'green'};
+`;
 
 function App() {
+
+    useEffect ( () =>{
+      const fetchProduct = async() =>{
+        const params ={
+          _limit: 10,
+        }
+        const productList = await productApi.getAll(params)
+        console.log(productList);
+      }
+      fetchProduct()
+    },[])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <Header />
+        <Switch>
+          <Route path="/" component={TodoFeature} exact />
+          <Route path="/todos" component={TodoFeature} />
+          <Route path="/albums" component={AlbumFeature} />
+        </Switch> 
     </div>
   );
 }
